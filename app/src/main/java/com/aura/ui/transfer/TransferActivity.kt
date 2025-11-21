@@ -4,37 +4,37 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import com.aura.databinding.ActivityTransferBinding
 
 /**
  * The transfer activity for the app.
  */
-class TransferActivity : AppCompatActivity()
-{
+class TransferActivity : AppCompatActivity() {
 
-  /**
-   * The binding for the transfer layout.
-   */
-  private lateinit var binding: ActivityTransferBinding
+    /**
+     * The binding for the transfer layout.
+     */
+    private lateinit var binding: ActivityTransferBinding
 
-  override fun onCreate(savedInstanceState: Bundle?)
-  {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
 
-    binding = ActivityTransferBinding.inflate(layoutInflater)
-    setContentView(binding.root)
+        binding = ActivityTransferBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    val recipient = binding.recipient
-    val amount = binding.amount
-    val transfer = binding.transfer
-    val loading = binding.loading
+        val recipient = binding.recipient
+        val amount = binding.amount
+        val transfer = binding.transfer
+        val loading = binding.loading
 
-    transfer.setOnClickListener {
-      loading.visibility = View.VISIBLE
+        transfer.setOnClickListener {
+            loading.visibility = View.VISIBLE
 
-      setResult(Activity.RESULT_OK)
-      finish()
+            setResult(Activity.RESULT_OK)
+            finish()
+        }
     }
-  }
 
 }
