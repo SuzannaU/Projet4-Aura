@@ -4,7 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import com.aura.R
 import com.aura.databinding.ActivityLoginBinding
 import com.aura.ui.home.HomeActivity
 
@@ -24,6 +27,25 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            val baseLeft = resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+            val baseTop = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+            val baseRight = resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+            val baseBottom = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+
+            v.setPadding(
+                baseLeft + systemBars.left,
+                baseTop + systemBars.top,
+                baseRight + systemBars.right,
+                baseBottom + systemBars.bottom
+            )
+
+            insets
+        }
+
 
         val login = binding.login
         val loading = binding.loading
