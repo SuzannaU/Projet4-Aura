@@ -69,20 +69,18 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.uiState.collect {
                 binding.loading.isVisible = it.isViewLoading
-                binding.identifierText.addTextChangedListener(getWatcher())
-                binding.passwordText.addTextChangedListener(getWatcher())
-
                 when (it) {
                     is LoginViewModel.LoginUiState.SuccessState -> {
-                        Log.d(TAG, "setupUi: login is granted")
+                        Log.i(TAG, "setupUi: login is granted")
                         val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
 
                     is LoginViewModel.LoginUiState.ErrorState -> {
-                        Log.d(TAG, "setupUi: login is NOT granted : ${it.message}")
-                        //TODO implement error behavior - Dialog + button enabled
+                        Log.i(TAG, "setupUi: error during login : ${it.message}")
+                        binding.loginButton.isEnabled = true
+                        LoginDialogFragment(it.errorType).show(supportFragmentManager, "GAME_DIALOG")
                     }
 
                     else -> {}
@@ -90,6 +88,8 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        binding.identifierText.addTextChangedListener(getWatcher())
+        binding.passwordText.addTextChangedListener(getWatcher())
         binding.loginButton.isEnabled = false
         setupClickListener()
     }

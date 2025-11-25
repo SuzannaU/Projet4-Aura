@@ -24,7 +24,6 @@ class LoginViewModel(val credentialsRepository: CredentialRepository) : ViewMode
         val credentials = Credentials(id, password)
         credentialsRepository.checkCredentials(credentials)
             .onEach { result ->
-                Log.d(TAG, "login: $result")
                 when (result) {
 
                     Result.Loading -> _uiState.value = LoginUiState.LoadingState
@@ -51,7 +50,7 @@ class LoginViewModel(val credentialsRepository: CredentialRepository) : ViewMode
                             _uiState.value = LoginUiState.SuccessState
                         } else {
                             _uiState.value = LoginUiState.ErrorState(
-                                null,
+                                "bad credentials",
                                 ErrorType.BAD_CREDENTIALS,
                             )
                         }
