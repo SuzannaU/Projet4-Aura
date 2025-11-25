@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aura.data.network.ErrorType
-import com.aura.data.repository.CredentialRepository
+import com.aura.data.repository.CredentialsRepository
 import com.aura.data.repository.Result
 import com.aura.domain.Credentials
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class LoginViewModel(val credentialsRepository: CredentialRepository) : ViewModel() {
+class LoginViewModel(val credentialsRepository: CredentialsRepository) : ViewModel() {
 
     private val TAG = "LoginViewModel"
 

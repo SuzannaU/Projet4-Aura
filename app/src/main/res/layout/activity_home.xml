@@ -34,6 +34,19 @@
     tools:text="@tools:sample/full_names"
     />
 
+    <ProgressBar
+        android:id="@+id/loginLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/balance"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintVertical_bias="0.8"
+        tools:visibility="visible" />
+
   <com.google.android.material.floatingactionbutton.FloatingActionButton
     android:id="@+id/transfer"
     android:layout_width="wrap_content"

@@ -2,26 +2,40 @@ package com.aura.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.aura.R
+import com.aura.data.repository.AccountsRepository
 import com.aura.databinding.ActivityHomeBinding
 import com.aura.ui.login.LoginActivity
 import com.aura.ui.transfer.TransferActivity
+import com.aura.viewModel.HomeViewModel
+import com.aura.viewModel.viewModelFactory
+import kotlinx.coroutines.launch
 
 /**
  * The home activity for the app.
  */
 class HomeActivity : AppCompatActivity() {
+    private val TAG = "HomeActivity"
 
     /**
      * The binding for the home layout.
      */
     private lateinit var binding: ActivityHomeBinding
+    private val viewModel: HomeViewModel by viewModels {
+        viewModelFactory {
+            HomeViewModel(AccountsRepository())
+        }
+    }
 
     /**
      * A callback for the result of starting the TransferActivity.
@@ -37,11 +51,31 @@ class HomeActivity : AppCompatActivity() {
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setupUi()
+    }
 
-        val balance = binding.balance
+    private fun setupUi() {
+        //TODO : retrieve userId from previous activity
+        viewModel.getUserAccounts(1234)
+        lifecycleScope.launch {
+            viewModel.uiState.collect {
+                binding.loginLoading.isVisible = it.isViewLoading
+                when (it) {
+                    is HomeViewModel.HomeUiState.SuccessState -> {
+                        Log.i(TAG, "setupUi: main balance is retrieved")
+                        binding.balance.text = it.balance.toString()
+                    }
+
+                    is HomeViewModel.HomeUiState.ErrorState -> {
+                        Log.i(TAG, "setupUi: error fetching main balance")
+                        //TODO : handle error states : Dialog + retry
+                    }
+
+                    else -> {}
+                }
+            }
+        }
         val transfer = binding.transfer
-
-        balance.text = "2654,54€"
 
         transfer.setOnClickListener {
             startTransferActivityForResult.launch(
@@ -51,6 +85,7 @@ class HomeActivity : AppCompatActivity() {
                 )
             )
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

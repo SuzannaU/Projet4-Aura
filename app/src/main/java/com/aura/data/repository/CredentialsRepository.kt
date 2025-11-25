@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
-class CredentialRepository() {
+class CredentialsRepository() {
     private val TAG = "CredentialsRepository"
 
     fun checkCredentials(credentials: Credentials): Flow<Result<Boolean>> = flow {

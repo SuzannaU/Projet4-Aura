@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.aura.R
-import com.aura.data.repository.CredentialRepository
+import com.aura.data.repository.CredentialsRepository
 import com.aura.databinding.ActivityLoginBinding
 import com.aura.ui.home.HomeActivity
 import com.aura.viewModel.LoginViewModel
@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
  * The login activity for the app.
  */
 class LoginActivity : AppCompatActivity() {
+    private val TAG = "LoginActivity"
 
     /**
      * The binding for the login layout.
@@ -31,10 +32,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels {
         viewModelFactory {
-            LoginViewModel(CredentialRepository())
+            LoginViewModel(CredentialsRepository())
         }
     }
-    private val TAG = "LoginActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
     private fun setupUi() {
         lifecycleScope.launch {
             viewModel.uiState.collect {
-                binding.loading.isVisible = it.isViewLoading
+                binding.loginLoading.isVisible = it.isViewLoading
                 when (it) {
                     is LoginViewModel.LoginUiState.SuccessState -> {
                         Log.i(TAG, "setupUi: login is granted")
@@ -98,11 +98,13 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             it.isEnabled = false
             lifecycleScope.launch {
-                val id = binding.identifierText.text.toString()
-                val password = binding.passwordText.text.toString()
+                //val id = binding.identifierText.text.toString()
+                val id = "1234"
+                //val password = binding.passwordText.text.toString()
+                val password = "p@sswOrd"
                 viewModel.login(
-                    id,         //1234
-                    password    //p@sswOrd
+                    id,
+                    password,
                 )
             }
         }

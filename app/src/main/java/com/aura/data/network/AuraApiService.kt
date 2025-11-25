@@ -1,5 +1,6 @@
 package com.aura.data.network
 
+import com.aura.data.response.AccountResponse
 import com.aura.data.response.CredentialsResponse
 import com.aura.domain.Credentials
 import com.squareup.moshi.Moshi
@@ -8,7 +9,9 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 private const val BASE_URL = "http://10.0.2.2:8080"
 
@@ -24,4 +27,7 @@ val retrofit = Retrofit.Builder()
 interface AuraApiService {
     @POST("login")
     suspend fun login(@Body credentials: Credentials): Response<CredentialsResponse>
+
+    @GET("accounts/{id}")
+    suspend fun fetchUserAccounts(@Path("id") userId: Int): Response<List<AccountResponse>>
 }
