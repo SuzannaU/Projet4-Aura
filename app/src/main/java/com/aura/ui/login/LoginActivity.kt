@@ -4,17 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.aura.R
+import com.aura.data.repository.CredentialRepository
 import com.aura.databinding.ActivityLoginBinding
 import com.aura.ui.home.HomeActivity
 import com.aura.viewModel.LoginViewModel
+import com.aura.viewModel.viewModelFactory
 import kotlinx.coroutines.launch
 
 /**
@@ -26,13 +29,17 @@ class LoginActivity : AppCompatActivity() {
      * The binding for the login layout.
      */
     private lateinit var binding: ActivityLoginBinding
-    private val viewModel: LoginViewModel by viewModels()
+    private val viewModel: LoginViewModel by viewModels {
+        viewModelFactory {
+            LoginViewModel(CredentialRepository())
+        }
+    }
+    private val TAG = "LoginActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setupInsets()
         setupUi()
     }
@@ -61,16 +68,42 @@ class LoginActivity : AppCompatActivity() {
     private fun setupUi() {
         lifecycleScope.launch {
             viewModel.uiState.collect {
-                binding.loginButton.isEnabled = it.isButtonEnabled
-                binding.loginButton.setOnClickListener {
-                    viewModel.setLoading()
-                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-                binding.loading.visibility = if (it.isViewLoading) View.VISIBLE else View.INVISIBLE
+                binding.loading.isVisible = it.isViewLoading
                 binding.identifierText.addTextChangedListener(getWatcher())
                 binding.passwordText.addTextChangedListener(getWatcher())
+
+                when (it) {
+                    is LoginViewModel.LoginUiState.SuccessState -> {
+                        Log.d(TAG, "setupUi: login is granted")
+                        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+
+                    is LoginViewModel.LoginUiState.ErrorState -> {
+                        Log.d(TAG, "setupUi: login is NOT granted : ${it.message}")
+                        //TODO implement error behavior - Dialog + button enabled
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+
+        binding.loginButton.isEnabled = false
+        setupClickListener()
+    }
+
+    private fun setupClickListener() {
+        binding.loginButton.setOnClickListener {
+            it.isEnabled = false
+            lifecycleScope.launch {
+                val id = binding.identifierText.text.toString()
+                val password = binding.passwordText.text.toString()
+                viewModel.login(
+                    id,         //1234
+                    password    //p@sswOrd
+                )
             }
         }
     }
@@ -84,9 +117,8 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                    viewModel.setButton(
-                        !binding.identifierText.text.isEmpty() && !binding.passwordText.text.isEmpty()
-                    )
+                binding.loginButton.isEnabled =
+                    !binding.identifierText.text.isEmpty() && !binding.passwordText.text.isEmpty()
             }
         }
     }
