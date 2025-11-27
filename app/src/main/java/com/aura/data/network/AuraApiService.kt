@@ -29,5 +29,5 @@ interface AuraApiService {
     suspend fun login(@Body credentials: Credentials): Response<LoginResponse>
 
     @GET("accounts/{id}")
-    suspend fun fetchUserAccounts(@Path("id") userId: Int): Response<List<AccountResponse>>
+    suspend fun fetchUserAccounts(@Path("id") userId: String): Response<List<AccountResponse>>
 }

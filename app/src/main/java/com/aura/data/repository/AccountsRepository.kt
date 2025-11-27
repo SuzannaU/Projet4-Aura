@@ -13,7 +13,7 @@ class AccountsRepository() {
 
     private val TAG = "AccountsRepository"
 
-    fun fetchUserAccounts(userId: Int): Flow<Result<List<Account>>> = flow {
+    fun fetchUserAccounts(userId: String): Flow<Result<List<Account>>> = flow {
         emit(Result.Loading)
         delay(1000)
         try {

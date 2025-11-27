@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
  */
 class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener {
     private val TAG = "HomeActivity"
+    private lateinit var userId: String
 
     /**
      * The binding for the home layout.
@@ -52,12 +53,18 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        retrieveUserId()
         setupUi()
     }
 
+    private fun retrieveUserId() {
+        val userIdFromExtra = intent.getStringExtra("userId")
+        userId = userIdFromExtra ?: getString(R.string.unknown_user)
+    }
+
     private fun setupUi() {
-        //TODO : retrieve userId from previous activity
-        viewModel.getUserAccounts(1234)
+        viewModel.getUserAccounts(userId)
         lifecycleScope.launch {
             viewModel.uiState.collect {
                 binding.loginLoading.isVisible = it.isViewLoading
@@ -97,7 +104,7 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
     }
 
     override fun onDialogPositiveClick(dialog: DialogFragment) {
-        viewModel.getUserAccounts(1234)
+        viewModel.getUserAccounts(userId)
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {

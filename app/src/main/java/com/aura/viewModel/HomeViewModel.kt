@@ -20,7 +20,7 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.LoadingState)
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    fun getUserAccounts(userId: Int) {
+    fun getUserAccounts(userId: String) {
         accountsRepository.fetchUserAccounts(userId)
             .onEach { result ->
                 when (result) {

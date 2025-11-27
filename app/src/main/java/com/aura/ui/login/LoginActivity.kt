@@ -70,19 +70,27 @@ class LoginActivity : AppCompatActivity() {
                 binding.loginLoading.isVisible = it.isViewLoading
                 when (it) {
                     is LoginViewModel.LoginUiState.GrantedState -> {
-                        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                        val intent = Intent(this@LoginActivity, HomeActivity::class.java).apply {
+                            putExtra("userId", binding.identifierText.text.toString())
+                        }
                         startActivity(intent)
                         finish()
                     }
 
                     is LoginViewModel.LoginUiState.NotGrantedState -> {
                         binding.loginButton.isEnabled = true
-                        LoginDialogFragment(it.errorType).show(supportFragmentManager, "LOGIN_DIALOG")
+                        LoginDialogFragment(it.errorType).show(
+                            supportFragmentManager,
+                            "LOGIN_DIALOG"
+                        )
                     }
 
                     is LoginViewModel.LoginUiState.ErrorState -> {
                         binding.loginButton.isEnabled = true
-                        LoginDialogFragment(it.errorType).show(supportFragmentManager, "LOGIN_DIALOG")
+                        LoginDialogFragment(it.errorType).show(
+                            supportFragmentManager,
+                            "LOGIN_DIALOG"
+                        )
                     }
 
                     else -> {}
@@ -100,8 +108,7 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             it.isEnabled = false
             lifecycleScope.launch {
-                //val id = binding.identifierText.text.toString()
-                val id = "1234"
+                val id = binding.identifierText.text.toString()
                 //val password = binding.passwordText.text.toString()
                 val password = "p@sswOrd"
                 viewModel.login(
