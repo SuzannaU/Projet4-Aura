@@ -61,14 +61,17 @@ class HomeActivity : AppCompatActivity() {
             viewModel.uiState.collect {
                 binding.loginLoading.isVisible = it.isViewLoading
                 when (it) {
-                    is HomeViewModel.HomeUiState.SuccessState -> {
-                        Log.i(TAG, "setupUi: main balance is retrieved")
+                    is HomeViewModel.HomeUiState.BalanceFoundState -> {
                         binding.balance.text = it.balance.toString()
                     }
 
                     is HomeViewModel.HomeUiState.ErrorState -> {
-                        Log.i(TAG, "setupUi: error fetching main balance")
+                        HomeDialogFragment(it.errorType).show(supportFragmentManager, "HOME_DIALOG")
                         //TODO : handle error states : Dialog + retry
+                    }
+
+                    HomeViewModel.HomeUiState.NoAccountState -> {
+                        binding.balance.text = "N/A"
                     }
 
                     else -> {}
@@ -100,7 +103,6 @@ class HomeActivity : AppCompatActivity() {
                 finish()
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }

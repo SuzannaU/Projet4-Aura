@@ -6,11 +6,10 @@ sealed class Result<out T> {
 
     object Loading : Result<Nothing>()
     data class Success<out R>(val value: R,) : Result<R>()
-    sealed class Failure() : Result<Nothing>() {
-        data class NetworkError(val message: String? = "Network Error",) : Failure()
-        data class BadRequest(val message: String? = "Bad Request",) : Failure()
-        data class ServerError(val message: String? = "ServerError",) : Failure()
-        data class Unknown(val message: String? = "Unknown Error",) : Failure()
+    sealed class Failure(val ErrorMessage: String?) : Result<Nothing>() {
+        data class NetworkError(val message: String? = "Network Error",) : Failure(message)
+        data class BadRequest(val message: String? = "Bad Request",) : Failure(message)
+        data class ServerError(val message: String? = "ServerError",) : Failure(message)
+        data class Unknown(val message: String? = "Unknown Error",) : Failure(message)
     }
-
 }

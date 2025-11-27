@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.aura.R
-import com.aura.data.repository.CredentialsRepository
+import com.aura.data.repository.LoginRepository
 import com.aura.databinding.ActivityLoginBinding
 import com.aura.ui.home.HomeActivity
 import com.aura.viewModel.LoginViewModel
@@ -32,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels {
         viewModelFactory {
-            LoginViewModel(CredentialsRepository())
+            LoginViewModel(LoginRepository())
         }
     }
 
@@ -70,17 +69,20 @@ class LoginActivity : AppCompatActivity() {
             viewModel.uiState.collect {
                 binding.loginLoading.isVisible = it.isViewLoading
                 when (it) {
-                    is LoginViewModel.LoginUiState.SuccessState -> {
-                        Log.i(TAG, "setupUi: login is granted")
+                    is LoginViewModel.LoginUiState.GrantedState -> {
                         val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
 
-                    is LoginViewModel.LoginUiState.ErrorState -> {
-                        Log.i(TAG, "setupUi: error during login : ${it.message}")
+                    is LoginViewModel.LoginUiState.NotGrantedState -> {
                         binding.loginButton.isEnabled = true
-                        LoginDialogFragment(it.errorType).show(supportFragmentManager, "GAME_DIALOG")
+                        LoginDialogFragment(it.errorType).show(supportFragmentManager, "LOGIN_DIALOG")
+                    }
+
+                    is LoginViewModel.LoginUiState.ErrorState -> {
+                        binding.loginButton.isEnabled = true
+                        LoginDialogFragment(it.errorType).show(supportFragmentManager, "LOGIN_DIALOG")
                     }
 
                     else -> {}

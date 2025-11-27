@@ -1,7 +1,7 @@
 package com.aura.data.network
 
 import com.aura.data.response.AccountResponse
-import com.aura.data.response.CredentialsResponse
+import com.aura.data.response.LoginResponse
 import com.aura.domain.Credentials
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -26,7 +26,7 @@ val retrofit = Retrofit.Builder()
 
 interface AuraApiService {
     @POST("login")
-    suspend fun login(@Body credentials: Credentials): Response<CredentialsResponse>
+    suspend fun login(@Body credentials: Credentials): Response<LoginResponse>
 
     @GET("accounts/{id}")
     suspend fun fetchUserAccounts(@Path("id") userId: Int): Response<List<AccountResponse>>

@@ -1,10 +1,12 @@
 package com.aura.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aura.data.network.ErrorType
 import com.aura.data.repository.AccountsRepository
 import com.aura.data.repository.Result
+import com.aura.domain.Account
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,48 +17,57 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
 
     private val TAG = "HomeViewModel"
 
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.DefaultState)
+    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.LoadingState)
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     fun getUserAccounts(userId: Int) {
         accountsRepository.fetchUserAccounts(userId)
             .onEach { result ->
                 when (result) {
-                    Result.Loading -> _uiState.value = HomeUiState.LoadingState
-
-                    is Result.Failure.NetworkError -> _uiState.value = HomeUiState.ErrorState(
-                        result.message,
-                        ErrorType.NETWORK,
-                    )
-
-                    is Result.Failure.ServerError -> _uiState.value = HomeUiState.ErrorState(
-                        result.message,
-                        ErrorType.SERVER,
-                    )
-
-                    is Result.Failure.BadRequest -> _uiState.value = HomeUiState.ErrorState(
-                        result.message,
-                        ErrorType.BAD_REQUEST,
-                    )
-
-                    is Result.Failure.Unknown -> _uiState.value = HomeUiState.ErrorState(
-                        result.message,
-                        ErrorType.UNKNOWN,
-                    )
-
-                    is Result.Success -> _uiState.value = HomeUiState.SuccessState(result.value)
+                    is Result.Loading -> onLoading(result)
+                    is Result.Failure -> onFailure(result)
+                    is Result.Success -> onSuccess(result)
                 }
             }
             .launchIn(viewModelScope)
     }
 
+    private fun onLoading(result: Result.Loading) {
+        _uiState.value = HomeUiState.LoadingState
+    }
+
+    private fun onFailure(result: Result.Failure) {
+        val eType = when (result) {
+            is Result.Failure.NetworkError -> ErrorType.NETWORK
+            is Result.Failure.ServerError -> ErrorType.SERVER
+            is Result.Failure.BadRequest -> ErrorType.BAD_REQUEST
+            is Result.Failure.Unknown -> ErrorType.UNKNOWN
+        }
+        _uiState.value = HomeUiState.ErrorState(
+            result.ErrorMessage,
+            eType,
+        )
+    }
+
+    private fun onSuccess(result: Result.Success<List<Account>>) {
+        for (account in result.value) {
+            if (account.main) {
+                _uiState.value = HomeUiState.BalanceFoundState(account.balance)
+                return
+            }
+        }
+        Log.d(TAG, "getUserAccounts: No main account found")
+        _uiState.value = HomeUiState.NoAccountState
+    }
 
     sealed class HomeUiState(
         val isViewLoading: Boolean,
     ) {
-        object DefaultState : HomeUiState(false)
         object LoadingState : HomeUiState(true)
-        data class SuccessState(
+
+        object NoAccountState : HomeUiState(false)
+
+        data class BalanceFoundState(
             val balance: Double = 0.0,
         ) : HomeUiState(false)
 

@@ -1,6 +1,5 @@
 package com.aura.data.repository
 
-import android.system.ErrnoException
 import android.util.Log
 import com.aura.data.network.AuraApi
 import com.aura.domain.Credentials
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
-class CredentialsRepository() {
+class LoginRepository() {
     private val TAG = "CredentialsRepository"
 
     fun checkCredentials(credentials: Credentials): Flow<Result<Boolean>> = flow {
@@ -20,12 +19,14 @@ class CredentialsRepository() {
             val response = AuraApi.retrofitService.login(credentials)
             val isGranted = response.body()?.granted ?: false
             val responseCode = response.code()
+
             when (responseCode) {
                 200 -> emit(Result.Success(isGranted))
                 400 -> emit(Result.Failure.BadRequest())
                 in 500..599 -> emit(Result.Failure.ServerError())
                 else -> emit(Result.Failure.Unknown())
             }
+
         } catch (e: SocketTimeoutException) {
             Log.e(TAG, "checkCredentials: ${e.message}", )
             emit(Result.Failure.ServerError("Connection timeout"))
