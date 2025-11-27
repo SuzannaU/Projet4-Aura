@@ -44,7 +44,7 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
             is Result.Failure.Unknown -> ErrorType.UNKNOWN
         }
         _uiState.value = HomeUiState.ErrorState(
-            result.ErrorMessage,
+            result.errorMessage,
             eType,
         )
     }

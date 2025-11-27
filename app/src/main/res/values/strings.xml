@@ -1,15 +1,29 @@
 <resources>
-  <string name="app_name">Aura</string>
+    <string name="app_name">Aura</string>
 
-  <string name="prompt_identifier">Identifiant</string>
-  <string name="prompt_password">Mot de passe</string>
-  <string name="action_sign_in">Connexion</string>
+    <string name="prompt_identifier">Identifiant</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Connexion</string>
 
-  <string name="balance">Balance :</string>
-  <string name="disconnect">Déconnexion</string>
-  <string name="bank_transfer">Faire un virement</string>
+    <string name="balance">Balance :</string>
+    <string name="failed">Echec</string>
+    <string name="no_account">Pas de compte</string>
+    <string name="disconnect">Déconnexion</string>
+    <string name="bank_transfer">Faire un virement</string>
 
-  <string name="prompt_recipient">Destinataire</string>
-  <string name="prompt_amount">Montant</string>
-  <string name="action_transfer">Faire le virement</string>
+    <string name="prompt_recipient">Destinataire</string>
+    <string name="prompt_amount">Montant</string>
+    <string name="action_transfer">Faire le virement</string>
+
+    <string name="server_error">Erreur du serveur</string>
+    <string name="network_error">Pas de connexion</string>
+    <string name="bad_request">Mauvaise requête</string>
+    <string name="bad_credentials">Identifiants incorrects</string>
+    <string name="unknown_error">Erreur inconnue</string>
+    <string name="something_wrong">Un problème est survenu</string>
+
+    <string name="ok">OK</string>
+    <string name="retry">Réessayer</string>
+    <string name="cancel">Annuler</string>
+
 </resources>

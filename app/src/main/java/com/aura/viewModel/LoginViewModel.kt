@@ -44,7 +44,7 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
             is Result.Failure.Unknown -> ErrorType.UNKNOWN
         }
         _uiState.value = LoginUiState.ErrorState(
-            result.ErrorMessage,
+            result.errorMessage,
             eType,
         )
     }
