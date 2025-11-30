@@ -37,15 +37,14 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
     }
 
     private fun onFailure(result: Result.Failure) {
-        val eType = when (result) {
+        val errorType = when (result) {
             is Result.Failure.NetworkError -> ErrorType.NETWORK
             is Result.Failure.ServerError -> ErrorType.SERVER
             is Result.Failure.BadRequest -> ErrorType.BAD_REQUEST
             is Result.Failure.Unknown -> ErrorType.UNKNOWN
         }
         _uiState.value = HomeUiState.ErrorState(
-            result.errorMessage,
-            eType,
+            errorType,
         )
     }
 
@@ -57,7 +56,7 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
             }
         }
         Log.d(TAG, "getUserAccounts: No main account found")
-        _uiState.value = HomeUiState.NoAccountState
+        _uiState.value = HomeUiState.ErrorState(ErrorType.NO_ACCOUNT)
     }
 
     sealed class HomeUiState(
@@ -65,14 +64,11 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
     ) {
         object LoadingState : HomeUiState(true)
 
-        object NoAccountState : HomeUiState(false)
-
         data class BalanceFoundState(
             val balance: Double = 0.0,
         ) : HomeUiState(false)
 
         data class ErrorState(
-            val message: String? = null,
             val errorType: ErrorType,
         ) : HomeUiState(false)
     }

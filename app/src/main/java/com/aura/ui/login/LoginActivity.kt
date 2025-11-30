@@ -97,14 +97,13 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-
-        binding.identifierText.addTextChangedListener(getWatcher())
-        binding.passwordText.addTextChangedListener(getWatcher())
         binding.loginButton.isEnabled = false
-        setupClickListener()
+        setupListeners()
     }
 
-    private fun setupClickListener() {
+    private fun setupListeners() {
+        binding.identifierText.addTextChangedListener(getWatcher())
+        binding.passwordText.addTextChangedListener(getWatcher())
         binding.loginButton.setOnClickListener {
             it.isEnabled = false
             lifecycleScope.launch {

@@ -23,6 +23,7 @@ class HomeDialogFragment(val errorType: ErrorType) : DialogFragment() {
             ErrorType.SERVER -> getString(R.string.server_error)
             ErrorType.NETWORK -> getString(R.string.network_error)
             ErrorType.BAD_REQUEST -> getString(R.string.bad_request)
+            ErrorType.NO_ACCOUNT -> getString(R.string.no_account)
             ErrorType.UNKNOWN -> getString(R.string.unknown_error)
             else -> getString(R.string.something_wrong)
         }

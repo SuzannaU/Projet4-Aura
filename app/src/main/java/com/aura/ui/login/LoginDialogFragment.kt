@@ -16,6 +16,7 @@ class LoginDialogFragment(val errorType: ErrorType) : DialogFragment() {
             ErrorType.BAD_REQUEST -> getString(R.string.bad_request)
             ErrorType.BAD_CREDENTIALS -> getString(R.string.bad_credentials)
             ErrorType.UNKNOWN -> getString(R.string.unknown_error)
+            else -> getString(R.string.something_wrong)
         }
 
         return activity?.let {

@@ -56,6 +56,7 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
 
         retrieveUserId()
         setupUi()
+        viewModel.getUserAccounts(userId)
     }
 
     private fun retrieveUserId() {
@@ -64,7 +65,6 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
     }
 
     private fun setupUi() {
-        viewModel.getUserAccounts(userId)
         lifecycleScope.launch {
             viewModel.uiState.collect {
                 binding.loginLoading.isVisible = it.isViewLoading
@@ -77,17 +77,15 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
                         showHomeDialog(it.errorType)
                     }
 
-                    HomeViewModel.HomeUiState.NoAccountState -> {
-                        binding.balance.setText(R.string.no_account)
-                    }
-
-                    else -> {}
+                    HomeViewModel.HomeUiState.LoadingState -> {}
                 }
             }
         }
-        val transfer = binding.transfer
+        setupListeners()
+    }
 
-        transfer.setOnClickListener {
+    private fun setupListeners() {
+        binding.transfer.setOnClickListener {
             startTransferActivityForResult.launch(
                 Intent(
                     this@HomeActivity,
@@ -95,7 +93,6 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
                 )
             )
         }
-
     }
 
     private fun showHomeDialog(errorType: ErrorType) {

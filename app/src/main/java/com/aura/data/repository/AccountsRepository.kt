@@ -10,7 +10,6 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 class AccountsRepository() {
-
     private val TAG = "AccountsRepository"
 
     fun fetchUserAccounts(userId: String): Flow<Result<List<Account>>> = flow {
@@ -38,15 +37,14 @@ class AccountsRepository() {
                 else -> emit(Result.Failure.Unknown())
             }
 
-        } catch (e: SocketTimeoutException) {
-            Log.e(TAG, "fetchUserAccounts: ${e.message}")
-            emit(Result.Failure.ServerError("Connection timeout"))
-        } catch (e: ConnectException) {
-            Log.e(TAG, "fetchUserAccounts: ${e.message}")
-            emit(Result.Failure.NetworkError("No connection"))
         } catch (e: Exception) {
-            Log.e(TAG, "fetchUserAccounts: error with exception: $e")
-            emit(Result.Failure.Unknown())
+            Log.e(TAG, "fetchUserAccounts: ${e.message}")
+            val failure = when (e) {
+                is SocketTimeoutException -> Result.Failure.ServerError("Connection Timeout")
+                is ConnectException -> Result.Failure.NetworkError("No connection")
+                else -> Result.Failure.Unknown()
+            }
+            emit(failure)
         }
     }
 }
