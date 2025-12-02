@@ -44,7 +44,7 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
      */
     private val startTransferActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            //TODO
+            //TODO - check if result is OK and recover data sent
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +67,7 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
     private fun setupUi() {
         lifecycleScope.launch {
             viewModel.uiState.collect {
-                binding.loginLoading.isVisible = it.isViewLoading
+                binding.loginLoading.isVisible = it is HomeViewModel.HomeUiState.LoadingState
                 when (it) {
                     is HomeViewModel.HomeUiState.BalanceFoundState -> {
                         binding.balance.text = it.balance.toString()
@@ -90,7 +90,7 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
                 Intent(
                     this@HomeActivity,
                     TransferActivity::class.java
-                )
+                ).putExtra("userId", userId)
             )
         }
     }

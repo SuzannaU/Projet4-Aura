@@ -59,17 +59,15 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
         _uiState.value = HomeUiState.ErrorState(ErrorType.NO_ACCOUNT)
     }
 
-    sealed class HomeUiState(
-        val isViewLoading: Boolean,
-    ) {
-        object LoadingState : HomeUiState(true)
+    sealed class HomeUiState {
+        object LoadingState : HomeUiState()
 
         data class BalanceFoundState(
             val balance: Double = 0.0,
-        ) : HomeUiState(false)
+        ) : HomeUiState()
 
         data class ErrorState(
             val errorType: ErrorType,
-        ) : HomeUiState(false)
+        ) : HomeUiState()
     }
 }

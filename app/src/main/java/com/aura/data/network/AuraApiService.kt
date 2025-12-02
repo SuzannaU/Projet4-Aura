@@ -2,7 +2,9 @@ package com.aura.data.network
 
 import com.aura.data.response.AccountResponse
 import com.aura.data.response.LoginResponse
+import com.aura.data.response.TransferResponse
 import com.aura.domain.Credentials
+import com.aura.domain.Transfer
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
@@ -30,4 +32,7 @@ interface AuraApiService {
 
     @GET("accounts/{id}")
     suspend fun fetchUserAccounts(@Path("id") userId: String): Response<List<AccountResponse>>
+
+    @POST("transfer")
+    suspend fun transfer(@Body transfer: Transfer): Response<TransferResponse>
 }

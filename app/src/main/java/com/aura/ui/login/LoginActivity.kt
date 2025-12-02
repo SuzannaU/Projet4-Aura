@@ -39,50 +39,23 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setupInsets()
         setupUi()
-    }
-
-    private fun setupInsets() {
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-            val baseLeft = resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
-            val baseTop = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
-            val baseRight = resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
-            val baseBottom = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
-
-            v.setPadding(
-                baseLeft + systemBars.left,
-                baseTop + systemBars.top,
-                baseRight + systemBars.right,
-                baseBottom + systemBars.bottom
-            )
-
-            insets
-        }
     }
 
     private fun setupUi() {
         lifecycleScope.launch {
             viewModel.uiState.collect {
-                binding.loginLoading.isVisible = it.isViewLoading
+                binding.loginLoading.isVisible = it is LoginViewModel.LoginUiState.LoadingState
                 when (it) {
+
                     is LoginViewModel.LoginUiState.GrantedState -> {
                         val intent = Intent(this@LoginActivity, HomeActivity::class.java).apply {
                             putExtra("userId", binding.identifierText.text.toString())
                         }
                         startActivity(intent)
                         finish()
-                    }
-
-                    is LoginViewModel.LoginUiState.NotGrantedState -> {
-                        binding.loginButton.isEnabled = true
-                        LoginDialogFragment(it.errorType).show(
-                            supportFragmentManager,
-                            "LOGIN_DIALOG"
-                        )
                     }
 
                     is LoginViewModel.LoginUiState.ErrorState -> {
@@ -104,6 +77,7 @@ class LoginActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.identifierText.addTextChangedListener(getWatcher())
         binding.passwordText.addTextChangedListener(getWatcher())
+
         binding.loginButton.setOnClickListener {
             it.isEnabled = false
             lifecycleScope.launch {
@@ -130,6 +104,26 @@ class LoginActivity : AppCompatActivity() {
                 binding.loginButton.isEnabled =
                     !binding.identifierText.text.isEmpty() && !binding.passwordText.text.isEmpty()
             }
+        }
+    }
+
+    private fun setupInsets() {
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            val baseLeft = resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+            val baseTop = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+            val baseRight = resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)
+            val baseBottom = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+
+            v.setPadding(
+                baseLeft + systemBars.left,
+                baseTop + systemBars.top,
+                baseRight + systemBars.right,
+                baseBottom + systemBars.bottom
+            )
+            insets
         }
     }
 }
