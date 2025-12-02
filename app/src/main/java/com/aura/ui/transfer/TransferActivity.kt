@@ -58,7 +58,7 @@ class TransferActivity : AppCompatActivity() {
                 binding.loading.isVisible = it is TransferViewModel.TransferUiState.LoadingState
                 when (it) {
                     is TransferViewModel.TransferUiState.TransferSuccessfulState -> {
-                        // TODO success behaviour
+                        binding.transfer.isEnabled = false
                         setResult(Activity.RESULT_OK)
                         finish()
                     }
@@ -82,12 +82,15 @@ class TransferActivity : AppCompatActivity() {
 
         binding.transfer.setOnClickListener {
             it.isEnabled = false
+
+            val recipient = binding.recipient.text.toString().trim()
+            val amount = binding.amount.text.toString().trim().toDouble()
             val transfer = Transfer(
                 userId,
-                binding.recipient.text.toString(),
-                // TODO handle string to Double
-                2.1,
+                recipient,
+                amount,
             )
+
             viewModel.transfer(transfer)
         }
     }

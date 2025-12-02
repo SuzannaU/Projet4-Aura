@@ -1,5 +1,6 @@
 package com.aura.ui.home
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -44,7 +45,9 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
      */
     private val startTransferActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            //TODO - check if result is OK and recover data sent
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.getUserAccounts(userId)
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +73,8 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
                 binding.loginLoading.isVisible = it is HomeViewModel.HomeUiState.LoadingState
                 when (it) {
                     is HomeViewModel.HomeUiState.BalanceFoundState -> {
-                        binding.balance.text = it.balance.toString()
+                        val formattedAmount = "%.2f".format(it.balance)
+                        binding.balance.text = formattedAmount
                     }
 
                     is HomeViewModel.HomeUiState.ErrorState -> {
