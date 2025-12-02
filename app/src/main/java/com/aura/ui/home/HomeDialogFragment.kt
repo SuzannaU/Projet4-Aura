@@ -7,7 +7,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.aura.R
-import com.aura.data.network.ErrorType
+import com.aura.domain.ErrorType
 
 class HomeDialogFragment(val errorType: ErrorType) : DialogFragment() {
 

@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.aura.R
-import com.aura.data.network.ErrorType
+import com.aura.domain.ErrorType
 
 class LoginDialogFragment(val errorType: ErrorType) : DialogFragment() {
 

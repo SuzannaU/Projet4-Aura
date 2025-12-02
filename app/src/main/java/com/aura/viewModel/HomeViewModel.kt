@@ -3,7 +3,7 @@ package com.aura.viewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aura.data.network.ErrorType
+import com.aura.domain.ErrorType
 import com.aura.data.repository.AccountsRepository
 import com.aura.data.repository.Result
 import com.aura.domain.Account

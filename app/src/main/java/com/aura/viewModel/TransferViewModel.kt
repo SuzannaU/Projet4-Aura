@@ -2,7 +2,7 @@ package com.aura.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aura.data.network.ErrorType
+import com.aura.domain.ErrorType
 import com.aura.data.repository.Result
 import com.aura.data.repository.TransferRepository
 import com.aura.domain.Transfer

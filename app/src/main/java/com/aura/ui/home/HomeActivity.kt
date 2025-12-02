@@ -13,7 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.aura.R
-import com.aura.data.network.ErrorType
+import com.aura.domain.ErrorType
 import com.aura.data.repository.AccountsRepository
 import com.aura.databinding.ActivityHomeBinding
 import com.aura.ui.login.LoginActivity

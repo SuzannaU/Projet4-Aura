@@ -1,4 +1,4 @@
-package com.aura.data.network
+package com.aura.domain
 
 enum class ErrorType {
     NETWORK,

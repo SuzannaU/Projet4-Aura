@@ -1,7 +1,5 @@
 package com.aura.data.repository
 
-import java.lang.Exception
-
 sealed class Result<out T> {
 
     object Loading : Result<Nothing>()
