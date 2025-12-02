@@ -1,0 +1,59 @@
+package com.aura.ui.transfer
+
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
+import android.os.Bundle
+import androidx.fragment.app.DialogFragment
+import com.aura.R
+import com.aura.domain.ErrorType
+
+class TransferDialogFragment(val errorType: ErrorType) : DialogFragment() {
+
+    private lateinit var listener: TransferDialogListener
+
+    interface TransferDialogListener {
+        fun onDialogPositiveClick(dialog: DialogFragment)
+        fun onDialogNegativeClick(dialog: DialogFragment)
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val message = when (errorType) {
+            ErrorType.NETWORK -> getString(R.string.network_error)
+            ErrorType.SERVER -> getString(R.string.server_error)
+            ErrorType.BAD_REQUEST -> getString(R.string.bad_request)
+            ErrorType.BAD_RECIPIENT -> getString(R.string.bad_recipient)
+            ErrorType.TRANSFER_FAILED -> getString(R.string.transfer_failed)
+            ErrorType.UNKNOWN -> getString(R.string.unknown_error)
+            else -> getString(R.string.something_wrong)
+        }
+
+        return activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder
+                .setMessage(message)
+                .setPositiveButton(
+                    getString(R.string.retry),
+                    DialogInterface.OnClickListener { dialog, id ->
+                        listener.onDialogPositiveClick(this)
+                    })
+                .setNegativeButton(
+                    getString(R.string.cancel),
+                    DialogInterface.OnClickListener { dialog, id ->
+                        listener.onDialogNegativeClick(this)
+                    })
+            builder.create()
+        } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            listener = context as TransferDialogListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException(("$context must implement HomeDialogListener"))
+        }
+
+    }
+}

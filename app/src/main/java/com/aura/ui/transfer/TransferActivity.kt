@@ -10,10 +10,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.aura.R
 import com.aura.data.repository.TransferRepository
 import com.aura.databinding.ActivityTransferBinding
+import com.aura.domain.ErrorType
 import com.aura.domain.Transfer
 import com.aura.viewModel.TransferViewModel
 import com.aura.viewModel.viewModelFactory
@@ -22,9 +24,10 @@ import kotlinx.coroutines.launch
 /**
  * The transfer activity for the app.
  */
-class TransferActivity : AppCompatActivity() {
+class TransferActivity : AppCompatActivity(), TransferDialogFragment.TransferDialogListener {
     private val TAG = "TransferActivity"
     private lateinit var userId: String
+    private lateinit var transfer: Transfer
 
     /**
      * The binding for the transfer layout.
@@ -65,7 +68,7 @@ class TransferActivity : AppCompatActivity() {
 
                     is TransferViewModel.TransferUiState.ErrorState -> {
                         binding.transfer.isEnabled = true
-                        // TODO error behaviour, dialog?
+                        showTransferDialog(it.errorType)
                     }
 
                     else -> {}
@@ -74,6 +77,18 @@ class TransferActivity : AppCompatActivity() {
         }
         binding.transfer.isEnabled = false
         setupListeners()
+    }
+
+    private fun showTransferDialog(errorType: ErrorType) {
+        val dialog = TransferDialogFragment(errorType)
+        dialog.show(supportFragmentManager, "TRANSFER_DIALOG")
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        viewModel.transfer(transfer)
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
     }
 
     private fun setupListeners() {
@@ -85,7 +100,7 @@ class TransferActivity : AppCompatActivity() {
 
             val recipient = binding.recipient.text.toString().trim()
             val amount = binding.amount.text.toString().trim().toDouble()
-            val transfer = Transfer(
+            transfer = Transfer(
                 userId,
                 recipient,
                 amount,

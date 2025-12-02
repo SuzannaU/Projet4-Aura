@@ -6,6 +6,7 @@ enum class ErrorType {
     BAD_REQUEST,
     BAD_CREDENTIALS,
     NO_ACCOUNT,
+    BAD_RECIPIENT,
     TRANSFER_FAILED,
     UNKNOWN,
 }

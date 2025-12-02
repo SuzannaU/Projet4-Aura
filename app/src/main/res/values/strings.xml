@@ -15,6 +15,8 @@
     <string name="prompt_recipient">Destinataire</string>
     <string name="prompt_amount">Montant</string>
     <string name="action_transfer">Faire le virement</string>
+    <string name="transfer_failed">Le transfert a échoué</string>
+    <string name="bad_recipient">Le destinataire n\'existe pas</string>
 
     <string name="server_error">Erreur du serveur</string>
     <string name="network_error">Pas de connexion</string>

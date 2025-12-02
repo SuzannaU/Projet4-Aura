@@ -30,7 +30,7 @@ class LoginRepository() {
         } catch (e: Exception) {
             Log.e(TAG, "fetchUserAccounts: ${e.message}")
             val failure = when (e) {
-                is SocketTimeoutException -> Result.Failure.ServerError("Connection Timeout")
+                is SocketTimeoutException -> Result.Failure.UnreachableServer("Connection Timeout")
                 is ConnectException -> Result.Failure.NetworkError("No connection")
                 else -> Result.Failure.Unknown()
             }

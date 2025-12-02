@@ -37,8 +37,9 @@ class TransferViewModel(val transferRepository: TransferRepository) : ViewModel(
     private fun onFailure(result: Result.Failure) {
         val errorType = when (result) {
             is Result.Failure.NetworkError -> ErrorType.NETWORK
-            is Result.Failure.ServerError -> ErrorType.SERVER
+            is Result.Failure.UnreachableServer -> ErrorType.SERVER
             is Result.Failure.BadRequest -> ErrorType.BAD_REQUEST
+            is Result.Failure.ServerError -> ErrorType.BAD_RECIPIENT
             is Result.Failure.Unknown -> ErrorType.UNKNOWN
         }
         _uiState.value = TransferUiState.ErrorState(
