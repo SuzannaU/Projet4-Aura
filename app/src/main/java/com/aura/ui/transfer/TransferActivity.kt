@@ -71,6 +71,10 @@ class TransferActivity : AppCompatActivity(), TransferDialogFragment.TransferDia
                         showTransferDialog(it.errorType)
                     }
 
+                    is TransferViewModel.TransferUiState.LoadingState -> {
+                        binding.transfer.isEnabled = false
+                    }
+
                     else -> {}
                 }
             }
