@@ -13,8 +13,6 @@ import java.net.SocketTimeoutException
 class AccountsRepository(val apiService: AuraApiService) {
     private val TAG = "AccountsRepository"
 
-    // add another method to do the fetching?
-
     fun fetchUserAccounts(userId: String): Flow<Result<List<Account>>> = flow {
         emit(Result.Loading)
         delay(1000)
