@@ -11,6 +11,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.aura.AuraApplication
 import com.aura.R
 import com.aura.data.repository.LoginRepository
 import com.aura.databinding.ActivityLoginBinding
@@ -30,9 +31,7 @@ class LoginActivity : AppCompatActivity() {
      */
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels {
-        viewModelFactory {
-            LoginViewModel(LoginRepository())
-        }
+        AuraApplication.appModule.loginViewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

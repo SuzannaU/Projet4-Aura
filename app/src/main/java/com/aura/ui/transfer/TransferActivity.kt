@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.aura.AuraApplication
 import com.aura.R
 import com.aura.data.repository.TransferRepository
 import com.aura.databinding.ActivityTransferBinding
@@ -34,9 +35,7 @@ class TransferActivity : AppCompatActivity(), TransferDialogFragment.TransferDia
      */
     private lateinit var binding: ActivityTransferBinding
     private val viewModel: TransferViewModel by viewModels {
-        viewModelFactory {
-            TransferViewModel(TransferRepository())
-        }
+        AuraApplication.appModule.transferViewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -15,17 +15,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-private const val BASE_URL = "http://10.0.2.2:8080"
-
-val retrofit = Retrofit.Builder()
-    .addConverterFactory(
-        MoshiConverterFactory.create(
-            Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-        )
-    )
-    .baseUrl(BASE_URL)
-    .build()
-
 interface AuraApiService {
     @POST("login")
     suspend fun login(@Body credentials: Credentials): Response<LoginResponse>

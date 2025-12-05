@@ -1,7 +1,7 @@
 package com.aura.data.repository
 
 import android.util.Log
-import com.aura.data.network.AuraApi
+import com.aura.data.network.AuraApiService
 import com.aura.domain.Transfer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.flow
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
-class TransferRepository() {
+class TransferRepository(val apiService: AuraApiService) {
     private val TAG = "TransferRepository"
 
     fun transfer(transfer: Transfer): Flow<Result<Boolean>> = flow {
         emit(Result.Loading)
         delay(1000)
         try {
-            val response = AuraApi.retrofitService.transfer(transfer)
+            val response = apiService.transfer(transfer)
             val isSuccessful = response.body()?.result ?: false
             val responseCode = response.code()
 

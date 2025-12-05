@@ -13,7 +13,9 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.aura.AuraApplication
 import com.aura.R
+import com.aura.data.network.AuraApiService
 import com.aura.domain.ErrorType
 import com.aura.data.repository.AccountsRepository
 import com.aura.databinding.ActivityHomeBinding
@@ -35,9 +37,7 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
      */
     private lateinit var binding: ActivityHomeBinding
     private val viewModel: HomeViewModel by viewModels {
-        viewModelFactory {
-            HomeViewModel(AccountsRepository())
-        }
+        AuraApplication.appModule.homeViewModelFactory
     }
 
     /**
@@ -45,7 +45,7 @@ class HomeActivity : AppCompatActivity(), HomeDialogFragment.HomeDialogListener 
      */
     private val startTransferActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 viewModel.getUserAccounts(userId)
             }
         }

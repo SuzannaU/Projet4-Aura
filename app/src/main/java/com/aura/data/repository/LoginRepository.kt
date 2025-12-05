@@ -1,7 +1,7 @@
 package com.aura.data.repository
 
 import android.util.Log
-import com.aura.data.network.AuraApi
+import com.aura.data.network.AuraApiService
 import com.aura.domain.Credentials
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.flow
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
-class LoginRepository() {
+class LoginRepository(val apiService: AuraApiService) {
     private val TAG = "CredentialsRepository"
 
     fun checkCredentials(credentials: Credentials): Flow<Result<Boolean>> = flow {
         emit(Result.Loading)
         delay(1000)
         try {
-            val response = AuraApi.retrofitService.login(credentials)
+            val response = apiService.login(credentials)
             val isGranted = response.body()?.granted ?: false
             val responseCode = response.code()
 
