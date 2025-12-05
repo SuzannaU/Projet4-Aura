@@ -38,6 +38,7 @@ class LoginRepositoryTest {
         result0: KClass<out Result<*>>,
         result1: KClass<out Result<*>>,
     ) = runTest {
+
         coEvery { apiService.login(any()) } returns response
 
         val results = mutableListOf<Result<Boolean>>()
@@ -68,8 +69,6 @@ class LoginRepositoryTest {
         assertEquals(size, results.size)
         assertTrue(result0.isInstance(results[0]))
         assertTrue(result1.isInstance(results[1]))
-
-
     }
 
     companion object {
