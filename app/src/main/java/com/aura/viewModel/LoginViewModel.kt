@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.onEach
 
 class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
 
-    private val TAG = "LoginViewModel"
-
     private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.DefaultState)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 

@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class TransferViewModel(val transferRepository: TransferRepository) : ViewModel() {
-    private val TAG = "TransferViewModel"
 
     private val _uiState = MutableStateFlow<TransferUiState>(TransferUiState.DefaultState)
     val uiState: StateFlow<TransferUiState> = _uiState.asStateFlow()
@@ -22,7 +21,7 @@ class TransferViewModel(val transferRepository: TransferRepository) : ViewModel(
         transferRepository.transfer(transfer)
             .onEach { result ->
                 when (result) {
-                    is Result.Loading -> onLoading(result)
+                    is Result.Loading -> onLoading()
                     is Result.Failure -> onFailure(result)
                     is Result.Success -> onSuccess(result)
                 }
@@ -30,7 +29,7 @@ class TransferViewModel(val transferRepository: TransferRepository) : ViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun onLoading(result: Result.Loading) {
+    private fun onLoading() {
         _uiState.value = TransferUiState.LoadingState
     }
 

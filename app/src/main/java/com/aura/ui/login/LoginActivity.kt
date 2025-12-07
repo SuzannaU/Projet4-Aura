@@ -13,11 +13,9 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.aura.AuraApplication
 import com.aura.R
-import com.aura.data.repository.LoginRepository
 import com.aura.databinding.ActivityLoginBinding
 import com.aura.ui.home.HomeActivity
 import com.aura.viewModel.LoginViewModel
-import com.aura.viewModel.viewModelFactory
 import kotlinx.coroutines.launch
 
 /**

@@ -1,6 +1,5 @@
 package com.aura.ui.home
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -15,14 +14,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.aura.AuraApplication
 import com.aura.R
-import com.aura.data.network.AuraApiService
 import com.aura.domain.ErrorType
-import com.aura.data.repository.AccountsRepository
 import com.aura.databinding.ActivityHomeBinding
 import com.aura.ui.login.LoginActivity
 import com.aura.ui.transfer.TransferActivity
 import com.aura.viewModel.HomeViewModel
-import com.aura.viewModel.viewModelFactory
 import kotlinx.coroutines.launch
 
 /**

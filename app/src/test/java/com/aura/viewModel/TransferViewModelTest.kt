@@ -1,8 +1,9 @@
 package com.aura.viewModel
 
-import com.aura.data.repository.LoginRepository
 import com.aura.data.repository.Result
+import com.aura.data.repository.TransferRepository
 import com.aura.domain.ErrorType
+import com.aura.domain.Transfer
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -24,10 +25,10 @@ import kotlin.reflect.KClass
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(InstantTaskExecutorExtension::class)
-class LoginViewModelTest {
-
-    val repository: LoginRepository = mockk()
-    val viewModel = LoginViewModel(repository)
+class TransferViewModelTest {
+    
+    val repository: TransferRepository = mockk()
+    val viewModel = TransferViewModel(repository)
 
     @BeforeEach
     fun setup() {
@@ -36,24 +37,24 @@ class LoginViewModelTest {
 
     @ParameterizedTest
     @MethodSource("resultProvider")
-    fun loginTest(
+    fun transferTest(
         result: Result<Boolean>,
-        state: KClass<out LoginViewModel.LoginUiState>,
+        state: KClass<out TransferViewModel.TransferUiState>,
         errorType: ErrorType?,
     ) = runTest {
 
         every {
-            repository.checkCredentials(any())
+            repository.transfer(any())
         } returns flowOf(result)
 
-        viewModel.login("123","123")
+        viewModel.transfer(Transfer("123","123", 2.00))
         advanceUntilIdle()
 
         assertTrue(state.isInstance(viewModel.uiState.value))
 
         // for errorStates only
         if (errorType != null) {
-            val errorState = viewModel.uiState.value as LoginViewModel.LoginUiState.ErrorState
+            val errorState = viewModel.uiState.value as TransferViewModel.TransferUiState.ErrorState
             assertEquals(errorType, errorState.errorType)
         }
     }
@@ -64,43 +65,43 @@ class LoginViewModelTest {
             return Stream.of(
                 Arguments.of(
                     Result.Loading,
-                    LoginViewModel.LoginUiState.LoadingState::class,
+                    TransferViewModel.TransferUiState.LoadingState::class,
                     null,
                 ),
                 Arguments.of(
                     Result.Failure.NetworkError(""),
-                    LoginViewModel.LoginUiState.ErrorState::class,
+                    TransferViewModel.TransferUiState.ErrorState::class,
                     ErrorType.NETWORK,
                 ),
                 Arguments.of(
                     Result.Failure.UnreachableServer(""),
-                    LoginViewModel.LoginUiState.ErrorState::class,
+                    TransferViewModel.TransferUiState.ErrorState::class,
                     ErrorType.SERVER,
                 ),
                 Arguments.of(
                     Result.Failure.ServerError(""),
-                    LoginViewModel.LoginUiState.ErrorState::class,
-                    ErrorType.SERVER,
+                    TransferViewModel.TransferUiState.ErrorState::class,
+                    ErrorType.BAD_RECIPIENT,
                 ),
                 Arguments.of(
                     Result.Failure.BadRequest(""),
-                    LoginViewModel.LoginUiState.ErrorState::class,
+                    TransferViewModel.TransferUiState.ErrorState::class,
                     ErrorType.BAD_REQUEST,
                 ),
                 Arguments.of(
                     Result.Failure.Unknown(""),
-                    LoginViewModel.LoginUiState.ErrorState::class,
+                    TransferViewModel.TransferUiState.ErrorState::class,
                     ErrorType.UNKNOWN,
                 ),
                 Arguments.of(
                     Result.Success(true),
-                    LoginViewModel.LoginUiState.GrantedState::class,
+                    TransferViewModel.TransferUiState.TransferSuccessfulState::class,
                     null,
                 ),
                 Arguments.of(
                     Result.Success(false),
-                    LoginViewModel.LoginUiState.ErrorState::class,
-                    ErrorType.BAD_CREDENTIALS,
+                    TransferViewModel.TransferUiState.ErrorState::class,
+                    ErrorType.TRANSFER_FAILED,
                 ),
             )
         }

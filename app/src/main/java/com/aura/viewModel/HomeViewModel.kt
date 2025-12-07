@@ -24,7 +24,7 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
         accountsRepository.fetchUserAccounts(userId)
             .onEach { result ->
                 when (result) {
-                    is Result.Loading -> onLoading(result)
+                    is Result.Loading -> onLoading()
                     is Result.Failure -> onFailure(result)
                     is Result.Success -> onSuccess(result)
                 }
@@ -32,7 +32,7 @@ class HomeViewModel(val accountsRepository: AccountsRepository) : ViewModel() {
             .launchIn(viewModelScope)
     }
 
-    private fun onLoading(result: Result.Loading) {
+    private fun onLoading() {
         _uiState.value = HomeUiState.LoadingState
     }
 
