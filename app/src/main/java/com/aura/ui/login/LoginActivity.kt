@@ -79,8 +79,7 @@ class LoginActivity : AppCompatActivity() {
             it.isEnabled = false
             lifecycleScope.launch {
                 val id = binding.identifierText.text.toString()
-                //val password = binding.passwordText.text.toString()
-                val password = "p@sswOrd"
+                val password = binding.passwordText.text.toString()
                 viewModel.login(
                     id,
                     password,
